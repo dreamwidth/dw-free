@@ -1,0 +1,58 @@
+    <h3>[% theme_data.cat_title %]</h3>
+
+    [%# code for the top paging area %]
+    [% max_page = theme_data.max_page %]
+    [% INCLUDE customize/paging.tt location = "top" %]
+
+    <div class='themes-area'>
+
+    [% FOREACH theme IN theme_data.themes %]
+        [% NEXT UNLESS theme %]
+
+        <div class='theme-item[% theme.current ? " selected" : "" %]'>
+        <img src="[% theme.imgurl %]" class='theme-preview' />
+
+        <a href='[% theme.preview_url %]' target='_blank' class='theme-preview-link' title="[% dw.ml('widget.themechooser.theme.preview') %]">
+            <img src='[% site.imgroot %]/customize/preview-theme.gif' class='theme-preview-image' />
+        </a>
+
+        <h5>[% theme.name %]</h5>
+        <div class='theme-action'>
+            <span class='theme-desc'>
+                [%- IF theme.designer_link -%]
+                    by <a href='[% theme.designer_link %]' class='theme-designer' data-designer="[% theme.designer %]">[% theme.designer %]</a>
+                [%- END -%]
+                for <a href='[% theme.layout_link %]' class='theme-layout' data-layout="[% theme.layoutid %]"><em>[% theme.layout %]</em></a>
+            </span>
+
+            [% IF theme.current %]
+                <strong><a href='[% dw.create_url("/customize/options", keep_args => ['authas']) %]'>
+                    [% dw.ml('widget.themechooser.theme.customize') %]
+                </a></strong>
+                [%- IF theme.can_edit_layout -%]
+                    <strong><a href='[% site.root %]/customize/advanced/layeredit?id=[% theme.layoutid %]'>
+                        [% dw.ml('widget.themechooser.theme.editlayoutlayer') %]
+                    </a></strong>
+                [%- END -%]
+                [%- IF theme.can_edit_theme -%]
+                    <strong><a href='[% site.root %]/customize/advanced/layeredit?id=[% theme.themeid %]'>
+                        [% dw.ml('widget.themechooser.theme.editthemelayer') %]
+                    </a></strong>
+                [%- END -%]
+                
+            [% ELSE %]
+                <form method="POST" class="theme-form">
+                [% dw.form_auth %]
+                [% form.hidden( name = "apply_themeid", value = theme.themeid) %]
+                [% form.hidden( name = "apply_layoutid", value = theme.layoutid) %]
+                [% form.submit( name = "action_apply", 'data-themeid' = theme.themeid, 'data-layoutid' = theme.layoutid , class = "theme_button button", id="theme_btn_$theme.layoutid$theme.themeid" , value = dw.ml( 'widget.themechooser.theme.apply' ) ) %]
+                </form>
+            [% END %]
+        </div><!-- end .theme-action -->
+    </div><!-- end .theme-item -->
+    [% END %]
+  </div><!-- end .themes-area -->
+
+
+    [%# code for the bottom paging area %]
+    [% INCLUDE customize/paging.tt location = "bottom" %]

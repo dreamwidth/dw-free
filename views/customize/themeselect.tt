@@ -1,0 +1,40 @@
+<script>
+    var confirmation = " [% dw.ml('widget.themechooser.confirmation') %] ";
+    var autocomplete_list = [[% autocomplete.join(", ") %]];
+</script>
+<div class='theme-selector-wrapper'>
+    <h4> [% dw.ml( 'widget.themenav.title2' ) %]</h4>
+
+    <form id=search_form method=post>
+        [% dw.form_auth %]
+        <div id="search_container">
+        [%- form.textbox(
+                name = 'search'
+                id = 'search_box'
+                size = 30
+                raw = "autocomplete='off' placeholder='theme, layout, or designer'"
+                class = "text"
+        )
+        -%]
+        </div>
+        [% form.submit( name = "action:search", id => "search_btn" value = dw.ml('widget.themenav.btn.search') ) %]
+    </form>
+
+    <div class='theme-selector-nav section-nav'>
+        [% INCLUDE customize/cats.tt cat_list = main_cats_sorted %]
+
+        [% IF cats_sorted.size > 0 %]
+            [% INCLUDE customize/cats.tt cat_list = cats_sorted %]
+        [% END %]
+        <ul class='theme-nav nostyle section-nav'>
+            <li class='first'>
+                <a href='[% site.root %]/customize/advanced/'>[% dw.ml( 'widget.themenav.developer' ) %]</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class='theme-selector-content pkg'>
+    [% INCLUDE customize/themechooser.tt %]
+    </div><!-- end .theme-selector-content -->
+
+</div>
